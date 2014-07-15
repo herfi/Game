@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
@@ -23,6 +24,7 @@ public class Player implements GestureListener, InputProcessor{
 	private float max_velocity;
 	private float jump_velocity = 40f;
 	private Vector2 velocity;
+    private Vector2 pos;
 	
 
 
@@ -32,6 +34,8 @@ public class Player implements GestureListener, InputProcessor{
 	private State state;
 	private Direction dir;
 	private TextureAtlas textureAtlas;
+    private TextureAtlas.AtlasSprite atlasSprite;
+    private Sprite sprite;
 	private Animation animation;
 	private GestureDetector gd;
 
@@ -40,20 +44,28 @@ public class Player implements GestureListener, InputProcessor{
     Animation stand;
     Animation jump;
     Animation walk;
-	
-	
 
 
-	
+    public Sprite getSprite() {
+        return sprite;
+    }
 
+    public Vector2 getPos() {
+        return pos;
+    }
 
-	public Player(){
-//		this.textureAtlas = new TextureAtlas(Gdx.files.internal("spineboy.atlas"));
-//		this.animation = new Animation(1/15f, textureAtlas.getRegions());
-		setState(State.Standing);
+    public Player(){
+/*		this.textureAtlas = new TextureAtlas(Gdx.files.internal("spineboy.atlas"));
+		//this.animation = new Animation(1/15f, textureAtlas.getRegions());
+//        this.stand = new Animation(1/15f, textureAtlas.findRegion("spineboy"));
+        sprite = textureAtlas.createSprite("spineboy");
+        sprite.rotate90(true);*/
+
+        setState(State.Standing);
 		setMax_velocity(10f);
 		//this.gd = new GestureDetector(this);
 		this.velocity = new Vector2(0, 0);
+        this.pos = new Vector2(PlayerPosX, PlayerPosY);
 
         this.koalaTexture = new Texture("koala.png");
         this.regions = TextureRegion.split(koalaTexture, 18, 26)[0];
@@ -114,6 +126,7 @@ public class Player implements GestureListener, InputProcessor{
 		if(state == State.Walking){
 			if (dir == Direction.RIGHT)
 				velocity.x = max_velocity;
+
 			if (dir == Direction.LEFT)
 				velocity.x = -max_velocity;
 		}
@@ -185,7 +198,7 @@ public class Player implements GestureListener, InputProcessor{
 			if (Gdx.input.getDeltaX(pointer) > 0){
 				setState(State.Walking);
 				setDir(Direction.RIGHT);
-				System.out.println("Pointer Nr:"+pointer);
+				System.out.println("Pointer Nr:"+pointer+"velocity"+velocity.x);
 			}
 			if (Gdx.input.getDeltaX(pointer) < 0) {
 				setState(State.Walking);

@@ -17,6 +17,6 @@
   </data>
  </layer>
  <objectgroup name="Grund">
-  <object x="62" y="734" width="3078" height="266"/>
+  <object name="grund" x="58" y="742" width="3076" height="256"/>
  </objectgroup>
 </map>

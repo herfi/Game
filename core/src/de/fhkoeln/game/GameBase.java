@@ -13,11 +13,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class GameBase extends ApplicationAdapter   {
@@ -26,8 +24,9 @@ public class GameBase extends ApplicationAdapter   {
 	//private BitmapFont font;
 	//private String message = "Touch something already!";
 	Player player;
-	World world = new World(new Vector2(0, -10), true);	
-	
+    WorldBuilder worldbuilder;
+    Box2DDebugRenderer debugRenderer;
+
 	private float elapsedTime = 0;
 	
 	float w;
@@ -38,9 +37,8 @@ public class GameBase extends ApplicationAdapter   {
 	
 	
 	
-	TiledMap tiledMap;
+
     OrthographicCamera camera;
-    TiledMapRenderer tiledMapRenderer;
 	
 	@Override
 	public void create () {
@@ -48,7 +46,10 @@ public class GameBase extends ApplicationAdapter   {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		player = new Player();
-		
+		worldbuilder = new WorldBuilder(player);
+
+        debugRenderer = new Box2DDebugRenderer();
+
 		//font = new BitmapFont(Gdx.files.internal("data/arial-15.fnt"),false);
         //font.setColor(Color.RED);			
 		w = Gdx.graphics.getWidth();
@@ -62,8 +63,7 @@ public class GameBase extends ApplicationAdapter   {
 
         //camera.rotate(rotationSpeed, 1, 0, 0);
         //camera.update();
-        tiledMap = new TmxMapLoader().load("test.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
         //Gdx.input.setInputProcessor(this);
         
         //Gdx.input.setInputProcessor(player.getGd());
@@ -83,21 +83,26 @@ public class GameBase extends ApplicationAdapter   {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
+
+        worldbuilder.getTiledMapRenderer().setView(camera);
+        worldbuilder.getTiledMapRenderer().render();
         
         batch.setProjectionMatrix(camera.combined);
         player.draw();
+        worldbuilder.update();
         batch.begin();
 		elapsedTime += Gdx.graphics.getDeltaTime();
+        debugRenderer.render(worldbuilder.getWorld(), camera.combined);
 		batch.draw(player.getAnimation().getKeyFrame(elapsedTime, true), player.getPlayerPosX(), player.getPlayerPosY());
+//        batch.draw(player.getSprite(), player.getPlayerPosX(), player.getPlayerPosY(),player.getSprite().getOriginX(),player.getSprite().getOriginY(),player.getSprite().getWidth(),player.getSprite().getHeight(),0,0,player.getSprite().getRotation());
+
 		//player.getAnimation().getKeyFrame(elapsedTime, true);
 		//font.drawMultiLine(batch, message, x, y);
-		
+
 		batch.end();
+
 		
-		world.step(1/45f, 6, 2);
+		worldbuilder.getWorld().step(1 / 45f, 6, 2);
 	}
 	
 	

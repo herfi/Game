@@ -2,8 +2,10 @@ package de.fhkoeln.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
@@ -33,6 +35,11 @@ public class Player implements GestureListener, InputProcessor{
 	private Animation animation;
 	private GestureDetector gd;
 
+    Texture koalaTexture;
+    TextureRegion[] regions;
+    Animation stand;
+    Animation jump;
+    Animation walk;
 	
 	
 
@@ -41,12 +48,19 @@ public class Player implements GestureListener, InputProcessor{
 
 
 	public Player(){
-		this.textureAtlas = new TextureAtlas(Gdx.files.internal("spineboy.atlas"));
-		this.animation = new Animation(1/15f, textureAtlas.getRegions());
+//		this.textureAtlas = new TextureAtlas(Gdx.files.internal("spineboy.atlas"));
+//		this.animation = new Animation(1/15f, textureAtlas.getRegions());
 		setState(State.Standing);
 		setMax_velocity(10f);
 		//this.gd = new GestureDetector(this);
 		this.velocity = new Vector2(0, 0);
+
+        this.koalaTexture = new Texture("koala.png");
+        this.regions = TextureRegion.split(koalaTexture, 18, 26)[0];
+        this.stand = new Animation(0, regions[0]);
+        this.jump = new Animation(0, regions[1]);
+        this.walk = new Animation(0.15f, regions[2], regions[3], regions[4]);
+        this.walk.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
 	}
 
 		
@@ -77,7 +91,7 @@ public class Player implements GestureListener, InputProcessor{
 	
 	public Animation getAnimation(){
 		
-		return animation;
+		return walk;
 	}
 	
 	public void disposeRes() {
@@ -313,5 +327,4 @@ public class Player implements GestureListener, InputProcessor{
 	}
 	
 	//InputProcessor end
-	
 }

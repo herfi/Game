@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="34" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="titleset" tilewidth="32" tileheight="32">
+  <image source="tileset.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="257" name="clouds" tilewidth="32" tileheight="32">
+  <image source="clouds-seamless-background-blue1.jpg" width="579" height="404"/>
+ </tileset>
+ <layer name="Kachelebene 2" width="100" height="34">
+  <data encoding="base64" compression="zlib">
+   eJzt2NW2UFUAQNF7FZRG6ZJQke7uxgAERLq7uxsFCQHp7u7u7u7mc5wfcV72Hudhvq4PWJmZGRlf8CVZyMpXfE02spODnOQiN3nIyzd8Sz4y004infwUoCCFKEwRilKM4pTgO0pSitKU4Xt+4Me0k1inLD9RjvJUoCKVqEwVqlKN6tSgJrWoTR3qpp3EOvWoTwMa0ojGNKEpzWhOC1rSita0oS0/80vaSazzK7/RjvZ04Hc60onO/EEX/qQr3ehOD3rSK+0k1ulNH/rSj/4MYCCDGMwQhjKM4YxgJKMYzZi0k1hnLOMYzwQmMonJTGEq05jODGYyi9nMYS7z0k5infks4C/+ZiGL+IfFLGEpy/iX5axgJf+xitVpJ7HOGtayjvVsYCOb2MwWtrKN7exgJ7vYzR72pp3EOvvYzwEOcojDHOEoxzjOCU5yitOc4SznOJ92Eutc4CKXuMwVrnKN69zgJre4zR3uco/7POBh2kms84jHPOEpz3jOC17yite84S3veM8HPvKJz2knsU6onyfWTqifJ9ZOqJ8n1k6onyfWTqifJ9ZOqJ8n1k6onyfWTqifJ9ZOqJ8n1k6onyfWTqifJ9ZOqJ8n1k6onyfWTqifJ9ZOqJ8n1k6onyfWTqifJ9ZOqJ8n1k6onyfWTqifJ9ZOqJ8n1k6onyfWzv8X9GL4
+  </data>
+ </layer>
+ <layer name="Kachelebene 1" width="100" height="34">
+  <data encoding="base64" compression="zlib">
+   eJztVctOAzEMDCC487xDCne6wJ3nHZC40+7y/5+AV0okd7CdICGVw4w02m028WNspykRBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEH8L+wId4V75Fa5LzwQHgqPhMfk1ngiPBWeCa+FS+GN4qCI6/ge7YnW0JfnF/1Yz55Y0U9vXtZZ7/xg0NMK7VwKr1Q9Wnm1crHOevtb2noaRe+tfCMfXg498fX0SatGM2+Fd6UeF46WMxfGu1c39JXLGS+eVh+hv8H4lo04FsmOq55r1dfTomfGenK1fNZ6nKt61Dy8fHIhalL31e+oS6TJADZxX31mZXNQaxl86HWMz9Mmp5+56dh6+j+6F6I5rsR66Lx1zqhZTpv6aNteLTLs8fLQmuua6Rmz3q0ZsWa7V0vsPU/vaI5+MzNePTw7Vf8ot6phFCueQ62tWcb7B+8qPQteXay+wfmy4ozumWgeWvNo2dL1WDq+rHysfdH/hDW7Xo9Efdgz862crR5q3S0tfb2Yov6K6jH/nz902mrFZ/WiN6vR7Ed96OkX+WzdFV5erVy9Xu2tg16r9bgv9XgsfFLUa9438m/4LHwRvgrfhO/k1vkh/BSuhOvCleIanh5xX4+tsYPTLzkW+5OysQafNYZRPSeIe0qbMa7g/Ai+JvUN4xmTrcsEGs2/v4Tf68AFog==
+  </data>
+ </layer>
+</map>

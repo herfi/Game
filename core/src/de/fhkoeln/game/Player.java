@@ -11,7 +11,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player implements GestureListener, InputProcessor{
+public class Player {
 	
 	public static enum State {
 
@@ -37,7 +37,7 @@ public class Player implements GestureListener, InputProcessor{
     private TextureAtlas.AtlasSprite atlasSprite;
     private Sprite sprite;
 	private Animation animation;
-	private GestureDetector gd;
+	
 
     Texture koalaTexture;
     TextureRegion[] regions;
@@ -108,7 +108,7 @@ public class Player implements GestureListener, InputProcessor{
 	
 	public void disposeRes() {
 		
-		textureAtlas.dispose();
+		//textureAtlas.dispose();
 	}
 
 
@@ -140,7 +140,7 @@ public class Player implements GestureListener, InputProcessor{
 		}
 	}
 	
-	public void draw(){
+	public void update(){
 		
 		PlayerPosX += velocity.x;			
 		PlayerPosY += velocity.y;
@@ -175,169 +175,11 @@ public class Player implements GestureListener, InputProcessor{
 		this.dir = dir;
 	}
 	
-	public GestureDetector getGd() {
-		return gd;
-	}
-
-
-	public void setGd(GestureDetector gd) {
-		this.gd = gd;
-	}
+	
 	
 	//GestureListener start
 	
 	
-	public boolean touchDragged (int x, int y, int pointer) {
-		
-		
-		//Gdx.input.getDeltaX(pointer);
-		
-		
-		if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
-			
-			if (Gdx.input.getDeltaX(pointer) > 0){
-				setState(State.Walking);
-				setDir(Direction.RIGHT);
-				System.out.println("Pointer Nr:"+pointer+"velocity"+velocity.x);
-			}
-			if (Gdx.input.getDeltaX(pointer) < 0) {
-				setState(State.Walking);
-				setDir(Direction.LEFT);
-			}
-		}
-		if (Gdx.input.getX(pointer) > Gdx.graphics.getWidth()/2 ){
-			if (Gdx.input.getDeltaY(pointer) < 0){
-				setState(State.Jumping);
-				setDir(Direction.RIGHT);
-				System.out.println("Pointer Nr:"+pointer);
-			}
-		}
-		
-		move();
-				
-	    return true;
-	    }
-	
-	@Override
-	public boolean touchDown(float x, float y, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean tap(float x, float y, int count, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean longPress(float x, float y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean fling(float velocityX, float velocityY, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		
-		
-//		if (deltaX > 0){
-//			setState(State.Walking);
-//			setDir(Direction.RIGHT);
-//		}
-//		if (deltaX < 0) {
-//			setState(State.Walking);
-//			setDir(Direction.LEFT);
-//		}
-//		move();
-	
-		
-		return false;
-	}
-
-	@Override
-	public boolean panStop(float x, float y, int pointer, int button) {
-
-		
-		return false;
-	}
-
-	@Override
-	public boolean zoom(float initialDistance, float distance) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
-			Vector2 pointer1, Vector2 pointer2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	
-	//GestureListener end
-	
-	
-	//InputProcessor start
-
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
-			setState(State.Standing);
-			move();
-		}
-		return false;
-	}
-
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 	//InputProcessor end
 }

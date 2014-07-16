@@ -25,6 +25,7 @@ public class GameBase extends ApplicationAdapter   {
 	//private String message = "Touch something already!";
 	Player player;
     WorldBuilder worldbuilder;
+    Controller controller;
     Box2DDebugRenderer debugRenderer;
 
 	private float elapsedTime = 0;
@@ -47,6 +48,7 @@ public class GameBase extends ApplicationAdapter   {
 		//img = new Texture("badlogic.jpg");
 		player = new Player();
 		worldbuilder = new WorldBuilder(player);
+		controller = new Controller(player);
 
         debugRenderer = new Box2DDebugRenderer();
 
@@ -67,7 +69,7 @@ public class GameBase extends ApplicationAdapter   {
         //Gdx.input.setInputProcessor(this);
         
         //Gdx.input.setInputProcessor(player.getGd());
-        Gdx.input.setInputProcessor(player);
+        Gdx.input.setInputProcessor(controller);
 
         
 	}
@@ -88,7 +90,7 @@ public class GameBase extends ApplicationAdapter   {
         worldbuilder.getTiledMapRenderer().render();
         
         batch.setProjectionMatrix(camera.combined);
-        player.draw();
+        player.update();
         worldbuilder.update();
         batch.begin();
 		elapsedTime += Gdx.graphics.getDeltaTime();

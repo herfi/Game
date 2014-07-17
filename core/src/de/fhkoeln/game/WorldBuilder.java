@@ -39,48 +39,51 @@ public class WorldBuilder {
         tiledMap = new TmxMapLoader().load("test.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         this.player = player;
+        player.getBody(world);
 
-// First we create a body definition
+        /*// First we create a body definition
         BodyDef bodyDef = new BodyDef();
         BodyDef playerBodyDef = new BodyDef();
-// We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
+        // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-// Set our body's starting position in the world
+        // Set our body's starting position in the world
         bodyDef.position.set(player.getPlayerPosX(), (Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
         playerBodyDef.position.set(player.getPlayerPosX(), player.getPlayerPosY());
-//        bodyDef.position.set(1, 500);
+        //        bodyDef.position.set(1, 500);
 
         System.out.println((Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
 
-// Create our body in the world using our body definition
+        // Create our body in the world using our body definition
         Body body = world.createBody(bodyDef);
         Body playerBody = world.createBody(playerBodyDef);
 
         //body.setLinearVelocity(15,10);
-        playerBody.setLinearVelocity(5,0);
+        //playerBody.setLinearVelocity(5,0);
 
-// Create a circle shape and set its radius to 6
-//      CircleShape circle = new CircleShape();
-//      circle.setRadius(6f);
+        // Create a circle shape and set its radius to 6
+        //      CircleShape circle = new CircleShape();
+        //      circle.setRadius(6f);
         // Create a polygon shape
         PolygonShape groundBox = new PolygonShape();
         groundBox.setAsBox(30,30);
-// Create a fixture definition to apply our shape to
+        // Create a fixture definition to apply our shape to
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = groundBox;
         fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f; // Make it bounce a little bit
 
-// Create our fixture and attach it to the body
+        // Create our fixture and attach it to the body
         Fixture fixture = body.createFixture(fixtureDef);
+        Fixture playerFixture = playerBody.createFixture(fixtureDef);
 
-// Remember to dispose of any shapes after you're done with them!
-// BodyDef and FixtureDef don't need disposing, but shapes do.
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
         groundBox.dispose();
         //tiledMapRenderer.setView(camera);
         //tiledMapRenderer.render();
+*/  
     }
 
     public TiledMapRenderer getTiledMapRenderer() {

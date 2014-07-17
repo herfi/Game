@@ -158,10 +158,10 @@ public class Controller implements GestureListener, InputProcessor{
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		// TODO Auto-generated method stub
-		if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
+		//if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
 			player.setState(State.Standing);
 			player.move();
-		}
+		//}
 		return false;
 	}
 

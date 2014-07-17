@@ -79,7 +79,7 @@ public class GameBase extends ApplicationAdapter   {
 //		Gdx.gl.glClearColor(1, 0, 0, 1);
 //		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 //		camera.rotate(rotationSpeed, 0, 0, 1);
-		camera.position.set(player.getPlayerPosX(), player.getPlayerPosY(), 100);
+		camera.position.set(player.getPlayerPosX(), player.getStartPlayerPos().y, 100);
         camera.update();
         
 		Gdx.gl.glClearColor(1, 0, 0, 1);
@@ -88,10 +88,11 @@ public class GameBase extends ApplicationAdapter   {
 
         worldbuilder.getTiledMapRenderer().setView(camera);
         worldbuilder.getTiledMapRenderer().render();
-        
+                
         batch.setProjectionMatrix(camera.combined);
         player.update();
         worldbuilder.update();
+        
         batch.begin();
 		elapsedTime += Gdx.graphics.getDeltaTime();
         debugRenderer.render(worldbuilder.getWorld(), camera.combined);

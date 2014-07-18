@@ -19,7 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class GameBase extends ApplicationAdapter   {
-    static final float WORLD_TO_BOX=0.3f;
+    static final float WORLD_TO_BOX=1/100f;
 	SpriteBatch batch;
 	Texture img;
 	//private BitmapFont font;
@@ -47,10 +47,6 @@ public class GameBase extends ApplicationAdapter   {
 		rotationSpeed += dy;
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
-		player = new Player();
-		worldbuilder = new WorldBuilder(player);
-		controller = new Controller(player);
-
         debugRenderer = new Box2DDebugRenderer();
 
 		//font = new BitmapFont(Gdx.files.internal("data/arial-15.fnt"),false);
@@ -68,6 +64,10 @@ public class GameBase extends ApplicationAdapter   {
 
         //camera.rotate(rotationSpeed, 1, 0, 0);
         camera.update();
+
+        player = new Player(camera);
+        worldbuilder = new WorldBuilder(player);
+        controller = new Controller(player);
 
         //Gdx.input.setInputProcessor(this);
         

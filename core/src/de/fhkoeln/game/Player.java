@@ -1,27 +1,32 @@
 package de.fhkoeln.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 
-public class Player {
+public class Player implements ContactListener {
 
-    static final float WORLD_TO_BOX=0.3f;
-	public static enum State {
+    static final float WORLD_TO_BOX=1/100f;
+    static final float Box_TO_WORLD=100f;
+
+
+
+    public static enum State {
 
 		Standing, Walking, Jumping, Dying, Dead
 	}
@@ -33,8 +38,9 @@ public class Player {
 	private float jump_velocity;
 	private Vector2 velocity;
     private Vector2 pos;
-	
 
+    boolean canApplyForce = false;
+    boolean jumpState = false;
 
 	private float PlayerPosX ;
 	private float PlayerPosY ;
@@ -47,6 +53,8 @@ public class Player {
     private TextureAtlas.AtlasSprite atlasSprite;
     private Sprite sprite;
 	private Animation animation;
+
+    OrthographicCamera camera;
 	
 
     Texture koalaTexture;
@@ -54,7 +62,7 @@ public class Player {
     Animation stand;
     Animation jump;
     Animation walk;
-	private Body body;
+	private Body groundBody;
 	private Body playerBody;
 
 
@@ -66,19 +74,19 @@ public class Player {
         return pos;
     }
 
-    public Player(){
+    public Player(OrthographicCamera camera){
 /*		this.textureAtlas = new TextureAtlas(Gdx.files.internal("spineboy.atlas"));
 		//this.animation = new Animation(1/15f, textureAtlas.getRegions());
 //        this.stand = new Animation(1/15f, textureAtlas.findRegion("spineboy"));
         sprite = textureAtlas.createSprite("spineboy");
         sprite.rotate90(true);*/
-    	
+    	this.camera = camera;
     	StartPlayerPos=new Vector3(Gdx.graphics.getWidth()/2*WORLD_TO_BOX, Gdx.graphics.getHeight()/2*WORLD_TO_BOX,0);
     	PlayerPosX=StartPlayerPos.x;
     	PlayerPosY=StartPlayerPos.y;
     	
         setState(State.Standing);
-		setMax_velocity(100f);
+		setMax_velocity(130*WORLD_TO_BOX);
 		//this.gd = new GestureDetector(this);
 		this.velocity = new Vector2(0, 0);
         this.pos = new Vector2(PlayerPosX, PlayerPosY);
@@ -113,49 +121,76 @@ public class Player {
 		StartPlayerPos = startPlayerPos;
 	}
 
-	public float getBody(WorldBuilder world) {
-		
-		 BodyDef bodyDef = new BodyDef();
-	     BodyDef playerBodyDef = new BodyDef();
-	     // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
-	     bodyDef.type = BodyDef.BodyType.KinematicBody;
-	     playerBodyDef.type = BodyDef.BodyType.DynamicBody;
+    public float getBody(WorldBuilder world) {
+
+        BodyDef groundBodyDef = new BodyDef();
+        BodyDef playerBodyDef = new BodyDef();
+        // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
+        groundBodyDef.type = BodyDef.BodyType.StaticBody;
+        playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.fixedRotation=true;
-        playerBodyDef.linearDamping = 2f;
-	     // Set our body's starting position in the world
-	     bodyDef.position.set(getPlayerPosX(), getPlayerPosY());
-	     playerBodyDef.position.set(getPlayerPosX(), getPlayerPosY()+50);
-	     
-	     //        bodyDef.position.set(1, 500);
+//        playerBodyDef.linearDamping = 2f;
+        // Set our body's starting position in the world
+        groundBodyDef.position.set(getPlayerPosX(), getPlayerPosY());
+        playerBodyDef.position.set(getPlayerPosX(), getPlayerPosY()+50);
 
-	     //System.out.println((Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
+        //        bodyDef.position.set(1, 500);
 
-	     // Create our body in the world using our body definition
-	     this.body = world.getWorld().createBody(bodyDef);
-	     
-	     this.playerBody = world.getWorld().createBody(playerBodyDef);
-	     
-	     // Create a circle shape and set its radius to 6
-	     //      CircleShape circle = new CircleShape();
-	     //      circle.setRadius(6f);
-	     // Create a polygon shape
-	     PolygonShape groundBox = new PolygonShape();
-	     groundBox.setAsBox(world.ConvertToBox(30),world.ConvertToBox(30));
-	     // Create a fixture definition to apply our shape to
-	     FixtureDef fixtureDef = new FixtureDef();
-	     fixtureDef.shape = groundBox;
-	     fixtureDef.density = 1f;
-	     fixtureDef.friction = 1f;
-	     fixtureDef.restitution = 0f; // Make it bounce a little bit
+        //System.out.println((Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
 
-	     // Create our fixture and attach it to the body
-	     Fixture fixture = body.createFixture(fixtureDef);
-	     Fixture playerFixture = playerBody.createFixture(fixtureDef);
-		
-		
-		
-		return 0;
-	}
+        // Create our body in the world using our body definition
+        this.groundBody = world.getWorld().createBody(groundBodyDef);
+
+        this.playerBody = world.getWorld().createBody(playerBodyDef);
+
+        // Create a circle shape and set its radius to 6
+        //      CircleShape circle = new CircleShape();
+        //      circle.setRadius(6f);
+        // Create a polygon shape
+        PolygonShape groundBox = new PolygonShape();
+        groundBox.setAsBox(camera.viewportWidth,1);
+        // Create a fixture definition to apply our shape to
+        FixtureDef groundFixtureDef = new FixtureDef();
+        groundFixtureDef.shape = groundBox;
+        groundFixtureDef.density = 1f;
+        groundFixtureDef.friction = 1f;
+        groundFixtureDef.restitution = 0f; // Make it bounce a little bit
+
+
+        Fixture fixture = groundBody.createFixture(groundFixtureDef);
+
+        PolygonShape playerBox = new PolygonShape();
+        playerBox.setAsBox(100*WORLD_TO_BOX,100*WORLD_TO_BOX);
+
+        FixtureDef playerFixtureDef = new FixtureDef();
+        playerFixtureDef.shape = playerBox;
+        playerFixtureDef.density = 1f;
+        playerFixtureDef.friction = 0.1f;
+        playerFixtureDef.restitution = 0f; // Make it bounce a little bit
+        Fixture playerFixture = playerBody.createFixture(playerFixtureDef);
+
+
+
+        return 0;
+    }
+
+/*    private FixtureDef makeRectFixture(float width,float height, BodyDef.BodyType bodyType, float density, float restitution, Vector2 pos){
+
+        PolygonShape bodyShape = new PolygonShape();
+
+        float w=ConvertToBox(width/2f);
+        float h=ConvertToBox(height/2f);
+        bodyShape.setAsBox(w,h);
+
+        FixtureDef fixtureDef=new FixtureDef();
+        fixtureDef.density=density;
+        fixtureDef.restitution=restitution;
+        fixtureDef.shape=bodyShape;
+
+
+        body.createFixture(fixtureDef);
+        bodyShape.dispose();
+    }*/
 	
 	public float getFixture() {
 		
@@ -208,6 +243,8 @@ public class Player {
 	public void setState(State state) {
 		this.state = state;
 	}
+
+    public void setJumpState(){ jumpState = true; }
 	
 	public void move(){
 
@@ -221,16 +258,25 @@ public class Player {
 				//velocity.x = -max_velocity;
 		}
 		
-		else if(state == State.Jumping){
+		if(jumpState){
 			//if(playerBody.getPosition().y == body.getPosition().y)
-				playerBody.applyLinearImpulse(0, playerBody.getMass()*10, 0, body.getWorldCenter().y+100, true);
+            if (canApplyForce){
+                playerBody.applyLinearImpulse(0, playerBody.getMass()*10, 0, playerBody.getWorldCenter().y, true);
+                canApplyForce = false;
+                jumpState = false;
+            }
+
 		}
 		
 		else if(state == State.Standing){
 			setVelocity(0f,playerBody.getLinearVelocity().y);
 			//velocity.x = 0;
+
+
 			
 		}
+
+        System.out.println("State: "+state+" jumpState: "+jumpState);
 	}
 	
 	public void update(){
@@ -240,7 +286,9 @@ public class Player {
 		
 		PlayerPosX=playerBody.getPosition().x;
 		PlayerPosY=playerBody.getPosition().y;
-		body.setTransform(playerBody.getPosition().x, body.getPosition().y, 0);
+
+		// groundbody sollte player folgen:
+		//groundBody.setTransform(playerBody.getPosition().x, groundBody.getPosition().y, 0);
 		
 	}
 
@@ -293,4 +341,28 @@ public class Player {
 	
 	
 	//InputProcessor end
+
+    @Override
+    public void beginContact(Contact contact) {
+        //state = State.Standing;
+        canApplyForce = true;
+        jumpState = false;
+        System.out.println("CONTACT!:");
+    }
+
+    @Override
+    public void endContact(Contact contact) {
+       // state = State.Jumping;
+        System.out.println("LOST CONTACT!:");
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
 }

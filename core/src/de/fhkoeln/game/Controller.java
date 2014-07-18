@@ -13,8 +13,9 @@ public class Controller implements GestureListener, InputProcessor{
 	
 	private GestureDetector gd;
 	private Player player;
-    private float firstDownX;
-    private float firstDownY;
+    private int firstDownX;
+    private int firstDownY;
+    private int firstDownPointer;
 
 	public Controller(Player player) {
 		this.player = player;
@@ -30,42 +31,38 @@ public class Controller implements GestureListener, InputProcessor{
 	}
 	
 	public boolean touchDragged (int x, int y, int pointer) {
-		
-		
+
+
 		//Gdx.input.getDeltaX(pointer);
 		
 		
 		if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
 			
-			if (Gdx.input.getDeltaX(pointer) > 0){
+			if ((firstDownPointer == pointer) && (x > firstDownX)){
 				player.setState(State.Walking);
 				player.setDir(Direction.RIGHT);
 				//System.out.println("Pointer Nr:"+pointer+"velocity"+velocity.x);
 			}
-			if (Gdx.input.getDeltaX(pointer) < 0) {
+			if ((firstDownPointer == pointer) && (x < firstDownX)){
 				player.setState(State.Walking);
 				player.setDir(Direction.LEFT);
+                //System.out.println("CONTACT!:");
 			}
 		}
 		else if (Gdx.input.getX(pointer) > Gdx.graphics.getWidth()/2 ){
 			if (Gdx.input.getDeltaY(pointer) < 0){
-				player.setState(State.Jumping);
-				player.setDir(Direction.RIGHT);
-				System.out.println("Pointer Nr:"+pointer);
+				player.setJumpState();
+				//System.out.println("Pointer Nr:"+pointer);
 			}
 		}
-		
+
 		player.move();
-				
+
 	    return true;
 	    }
 	
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
-		firstDownX = x;
-        firstDownY = y;
-        System.out.println("Pointer Nr:"+x);
-
 		return false;
 	}
 
@@ -155,20 +152,25 @@ public class Controller implements GestureListener, InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+        firstDownX = screenX;
+        firstDownY = screenY;
+        firstDownPointer = pointer;
+        //System.out.println("pimmel:"+screenX);
+
 		return false;
 	}
 
 
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		//if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
-			player.setState(State.Standing);
-			player.move();
-		//}
-		return false;
-	}
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        //if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
+        if (firstDownPointer != pointer) {
+            player.setState(State.Standing);
+        }
+        player.move();
+        return false;
+    }
 
 
 	@Override

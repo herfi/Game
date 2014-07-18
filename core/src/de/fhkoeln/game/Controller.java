@@ -6,18 +6,20 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
-import de.fhkoeln.game.Player.Direction;
+import de.fhkoeln.game.Player.DirectionX;
+import de.fhkoeln.game.Player.DirectionY;
 import de.fhkoeln.game.Player.State;
 
 public class Controller implements GestureListener, InputProcessor{
 	
 	private GestureDetector gd;
 	private Player player;
-    private int firstDownX;
-    private int firstDownY;
-    private int firstDownPointer;
+    private int leftDownX;
+    private int leftDownY;
+    private int leftPointer;
+    private float tapSquareSize = 40;
 
-	public Controller(Player player) {
+    public Controller(Player player) {
 		this.player = player;
 	}
 	
@@ -29,25 +31,35 @@ public class Controller implements GestureListener, InputProcessor{
 	public void setGd(GestureDetector gd) {
 		this.gd = gd;
 	}
-	
+
 	public boolean touchDragged (int x, int y, int pointer) {
 
 
 		//Gdx.input.getDeltaX(pointer);
-		
-		
+
+
 		if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
-			
-			if ((firstDownPointer == pointer) && (x > firstDownX)){
-				player.setState(State.Walking);
-				player.setDir(Direction.RIGHT);
-				//System.out.println("Pointer Nr:"+pointer+"velocity"+velocity.x);
-			}
-			if ((firstDownPointer == pointer) && (x < firstDownX)){
-				player.setState(State.Walking);
-				player.setDir(Direction.LEFT);
-                //System.out.println("CONTACT!:");
-			}
+
+            if (!isWithinTapSquare(x,y,leftDownX,leftDownY)) {
+
+                if ((leftPointer == pointer) && (x > leftDownX+20)) {
+                    player.setState(State.Walking);
+                    player.setDirX(DirectionX.RIGHT);
+                }
+                if ((leftPointer == pointer) && (x < leftDownX-20)) {
+                    player.setState(State.Walking);
+                    player.setDirX(DirectionX.LEFT);
+                }
+                if ((leftPointer == pointer) && (y < leftDownY-20)) {
+                    player.setState(State.Walking);
+                    player.setDirY(DirectionY.UP);
+                }
+                if ((leftPointer == pointer) && (y > leftDownY+20)) {
+                    player.setState(State.Walking);
+                    player.setDirY(DirectionY.DOWN);
+                }
+            }
+            else player.setState(State.Standing);
 		}
 		else if (Gdx.input.getX(pointer) > Gdx.graphics.getWidth()/2 ){
 			if (Gdx.input.getDeltaY(pointer) < 0){
@@ -60,6 +72,10 @@ public class Controller implements GestureListener, InputProcessor{
 
 	    return true;
 	    }
+
+    private boolean isWithinTapSquare (float x, float y, float centerX, float centerY) {
+        return Math.abs(x - centerX) < tapSquareSize && Math.abs(y - centerY) < tapSquareSize;
+    }
 	
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
@@ -152,11 +168,12 @@ public class Controller implements GestureListener, InputProcessor{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        firstDownX = screenX;
-        firstDownY = screenY;
-        firstDownPointer = pointer;
-        //System.out.println("pimmel:"+screenX);
-
+        if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ) {
+            leftDownX = screenX;
+            leftDownY = screenY;
+            leftPointer = pointer;
+        }
+        System.out.println("POS: "+leftDownX+"-"+leftDownY);
 		return false;
 	}
 
@@ -165,7 +182,7 @@ public class Controller implements GestureListener, InputProcessor{
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         // TODO Auto-generated method stub
         //if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
-        if (firstDownPointer != pointer) {
+        if (leftPointer == pointer) {
             player.setState(State.Standing);
         }
         player.move();

@@ -30,11 +30,16 @@ public class Player implements ContactListener {
 
 		Standing, Walking, Jumping, Dying, Dead
 	}
-	public static enum Direction {
-		LEFT, RIGHT;
+	public static enum DirectionX {
+		LEFT, RIGHT, STAND;
 	}
+
+    public static enum DirectionY {
+        UP, DOWN, STAND;
+    }
 	
-	private float max_velocity;
+	private float maxVelocity;
+    private float maxVelocityY;
 	private float jump_velocity;
 	private Vector2 velocity;
     private Vector2 pos;
@@ -48,8 +53,9 @@ public class Player implements ContactListener {
 	private Vector3 StartPlayerPos;
 	
 	private State state;
-	private Direction dir;
-	private TextureAtlas textureAtlas;
+	private DirectionX dirx;
+    private DirectionY diry;
+    private TextureAtlas textureAtlas;
     private TextureAtlas.AtlasSprite atlasSprite;
     private Sprite sprite;
 	private Animation animation;
@@ -86,8 +92,10 @@ public class Player implements ContactListener {
     	PlayerPosY=StartPlayerPos.y;
     	
         setState(State.Standing);
-		setMax_velocity(130*WORLD_TO_BOX);
-		//this.gd = new GestureDetector(this);
+		setMaxVelocity(130 * WORLD_TO_BOX);
+        setMaxVelocityY(50 * WORLD_TO_BOX);
+
+        //this.gd = new GestureDetector(this);
 		this.velocity = new Vector2(0, 0);
         this.pos = new Vector2(PlayerPosX, PlayerPosY);
 
@@ -98,18 +106,7 @@ public class Player implements ContactListener {
         this.walk = new Animation(0.15f, regions[2], regions[3], regions[4]);
         this.walk.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
         
-        
-        
-       
 
-        //body.setLinearVelocity(15,10);
-        //playerBody.setLinearVelocity(5,0);
-
-       
-
-        // Remember to dispose of any shapes after you're done with them!
-        // BodyDef and FixtureDef don't need disposing, but shapes do.
-        //groundBox.dispose();
 	}
 
 	
@@ -126,7 +123,7 @@ public class Player implements ContactListener {
         BodyDef groundBodyDef = new BodyDef();
         BodyDef playerBodyDef = new BodyDef();
         // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
-        groundBodyDef.type = BodyDef.BodyType.StaticBody;
+        groundBodyDef.type = BodyDef.BodyType.KinematicBody;
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.fixedRotation=true;
 //        playerBodyDef.linearDamping = 2f;
@@ -169,7 +166,8 @@ public class Player implements ContactListener {
         playerFixtureDef.restitution = 0f; // Make it bounce a little bit
         Fixture playerFixture = playerBody.createFixture(playerFixtureDef);
 
-
+        playerBox.dispose();
+        groundBox.dispose();
 
         return 0;
     }
@@ -249,14 +247,18 @@ public class Player implements ContactListener {
 	public void move(){
 
 		if(state == State.Walking){
-			if (dir == Direction.RIGHT)
-				setVelocity(max_velocity,playerBody.getLinearVelocity().y);
-				
+			if (dirx == DirectionX.RIGHT)
+				setVelocity(maxVelocity,playerBody.getLinearVelocity().y);
 
-			if (dir == Direction.LEFT)
-				setVelocity(-max_velocity,playerBody.getLinearVelocity().y);
-				//velocity.x = -max_velocity;
-		}
+			if (dirx == DirectionX.LEFT)
+				setVelocity(-maxVelocity,playerBody.getLinearVelocity().y);
+
+            if (diry == DirectionY.UP)
+                groundBody.setLinearVelocity(0f, maxVelocityY);
+
+            if (diry == DirectionY.DOWN)
+                groundBody.setLinearVelocity(0f, -maxVelocityY);
+        }
 		
 		if(jumpState){
 			//if(playerBody.getPosition().y == body.getPosition().y)
@@ -270,13 +272,16 @@ public class Player implements ContactListener {
 		
 		else if(state == State.Standing){
 			setVelocity(0f,playerBody.getLinearVelocity().y);
+            groundBody.setLinearVelocity(0,0);
+            dirx = DirectionX.STAND;
+            diry = DirectionY.STAND;
 			//velocity.x = 0;
 
 
 			
 		}
 
-        System.out.println("State: "+state+" jumpState: "+jumpState);
+        System.out.println("State: "+state+" Direction: "+diry+"--"+dirx);
 	}
 	
 	public void update(){
@@ -293,14 +298,21 @@ public class Player implements ContactListener {
 	}
 
 
-	public float getMax_velocity() {
-		return max_velocity;
+	public float getMaxVelocity() {
+		return maxVelocity;
 	}
 
-
-	public void setMax_velocity(float max_velocity) {
-		this.max_velocity = max_velocity;
+	public void setMaxVelocity(float maxVelocity) {
+		this.maxVelocity = maxVelocity;
 	}
+
+    public float getMaxVelocityY() {
+        return maxVelocityY;
+    }
+
+    public void setMaxVelocityY(float maxVelocityY) {
+        this.maxVelocityY = maxVelocityY;
+    }
 	
 	public Vector2 getVelocity() {
 		return velocity;
@@ -325,15 +337,21 @@ public class Player implements ContactListener {
 	}
 
 
-	public Direction getDir() {
-		return dir;
+	public DirectionX getDirX() {
+		return dirx;
 	}
 
+    public DirectionY getDirY() {
+        return diry;
+    }
 
-	public void setDir(Direction dir) {
-		this.dir = dir;
+	public void setDirX(DirectionX dir) {
+		this.dirx = dir;
 	}
-	
+
+    public void setDirY(DirectionY dir) {
+        this.diry = dir;
+    }
 	
 	
 	//GestureListener start

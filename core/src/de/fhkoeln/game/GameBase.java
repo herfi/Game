@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class GameBase extends ApplicationAdapter   {
+    static final float WORLD_TO_BOX=0.3f;
 	SpriteBatch batch;
 	Texture img;
 	//private BitmapFont font;
@@ -59,7 +60,7 @@ public class GameBase extends ApplicationAdapter   {
         
         
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,w*0.3f,h*0.3f);
+        camera.setToOrtho(false,w*WORLD_TO_BOX,h*WORLD_TO_BOX);
         //camera.setToOrtho(false,1280,720);
 
         //camera.zoom += 2.5;
@@ -98,7 +99,7 @@ public class GameBase extends ApplicationAdapter   {
         batch.begin();
 		elapsedTime += Gdx.graphics.getDeltaTime();
         debugRenderer.render(worldbuilder.getWorld(), camera.combined);
-		batch.draw(player.getAnimation().getKeyFrame(elapsedTime, true), player.getPlayerPosX()*0.3f, player.getPlayerPosY()*0.3f);
+		batch.draw(player.getAnimation().getKeyFrame(elapsedTime, true), player.getPlayerPosX()*WORLD_TO_BOX, player.getPlayerPosY()*WORLD_TO_BOX);
 //        batch.draw(player.getSprite(), player.getPlayerPosX(), player.getPlayerPosY(),player.getSprite().getOriginX(),player.getSprite().getOriginY(),player.getSprite().getWidth(),player.getSprite().getHeight(),0,0,player.getSprite().getRotation());
 
 		//player.getAnimation().getKeyFrame(elapsedTime, true);

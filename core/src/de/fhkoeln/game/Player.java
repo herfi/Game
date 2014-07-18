@@ -19,7 +19,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Player {
-	
+
+    static final float WORLD_TO_BOX=0.3f;
 	public static enum State {
 
 		Standing, Walking, Jumping, Dying, Dead
@@ -29,7 +30,7 @@ public class Player {
 	}
 	
 	private float max_velocity;
-	private float jump_velocity = 40f;
+	private float jump_velocity;
 	private Vector2 velocity;
     private Vector2 pos;
 	
@@ -72,7 +73,7 @@ public class Player {
         sprite = textureAtlas.createSprite("spineboy");
         sprite.rotate90(true);*/
     	
-    	StartPlayerPos=new Vector3(Gdx.graphics.getWidth()/2*0.3f, Gdx.graphics.getHeight()/2*0.3f,0);
+    	StartPlayerPos=new Vector3(Gdx.graphics.getWidth()/2*WORLD_TO_BOX, Gdx.graphics.getHeight()/2*WORLD_TO_BOX,0);
     	PlayerPosX=StartPlayerPos.x;
     	PlayerPosY=StartPlayerPos.y;
     	
@@ -119,6 +120,8 @@ public class Player {
 	     // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
 	     bodyDef.type = BodyDef.BodyType.KinematicBody;
 	     playerBodyDef.type = BodyDef.BodyType.DynamicBody;
+        playerBodyDef.fixedRotation=true;
+        playerBodyDef.linearDamping = 2f;
 	     // Set our body's starting position in the world
 	     bodyDef.position.set(getPlayerPosX(), getPlayerPosY());
 	     playerBodyDef.position.set(getPlayerPosX(), getPlayerPosY()+50);
@@ -141,8 +144,8 @@ public class Player {
 	     // Create a fixture definition to apply our shape to
 	     FixtureDef fixtureDef = new FixtureDef();
 	     fixtureDef.shape = groundBox;
-	     fixtureDef.density = 0f;
-	     fixtureDef.friction = 0f;
+	     fixtureDef.density = 1f;
+	     fixtureDef.friction = 1f;
 	     fixtureDef.restitution = 0f; // Make it bounce a little bit
 
 	     // Create our fixture and attach it to the body
@@ -220,7 +223,7 @@ public class Player {
 		
 		else if(state == State.Jumping){
 			//if(playerBody.getPosition().y == body.getPosition().y)
-				playerBody.applyForce(0, jump_velocity, 0, body.getWorldCenter().y+100, true);
+				playerBody.applyLinearImpulse(0, playerBody.getMass()*10, 0, body.getWorldCenter().y+100, true);
 		}
 		
 		else if(state == State.Standing){

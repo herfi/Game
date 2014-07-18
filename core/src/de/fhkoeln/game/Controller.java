@@ -13,6 +13,8 @@ public class Controller implements GestureListener, InputProcessor{
 	
 	private GestureDetector gd;
 	private Player player;
+    private float firstDownX;
+    private float firstDownY;
 
 	public Controller(Player player) {
 		this.player = player;
@@ -45,7 +47,7 @@ public class Controller implements GestureListener, InputProcessor{
 				player.setDir(Direction.LEFT);
 			}
 		}
-		if (Gdx.input.getX(pointer) > Gdx.graphics.getWidth()/2 ){
+		else if (Gdx.input.getX(pointer) > Gdx.graphics.getWidth()/2 ){
 			if (Gdx.input.getDeltaY(pointer) < 0){
 				player.setState(State.Jumping);
 				player.setDir(Direction.RIGHT);
@@ -60,7 +62,10 @@ public class Controller implements GestureListener, InputProcessor{
 	
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
-		// TODO Auto-generated method stub
+		firstDownX = x;
+        firstDownY = y;
+        System.out.println("Pointer Nr:"+x);
+
 		return false;
 	}
 

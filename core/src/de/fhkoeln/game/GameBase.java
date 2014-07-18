@@ -66,7 +66,7 @@ public class GameBase extends ApplicationAdapter   {
         camera.update();
 
         player = new Player(camera);
-        worldbuilder = new WorldBuilder(player);
+        worldbuilder = new WorldBuilder(player,camera);
         controller = new Controller(player);
 
         //Gdx.input.setInputProcessor(this);

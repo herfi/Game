@@ -1,5 +1,6 @@
 package de.fhkoeln.game;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -25,17 +26,20 @@ public class WorldBuilder {
     private BodyDef.BodyType bodyType;
     BodyDef bodyDef;
     Player player;
+    Camera camera;
 
     public Body getBody() {
         return body;
     }
 
-    public WorldBuilder(Player player) {
+    public WorldBuilder(Player player,Camera camera) {
         world = new World(new Vector2(0, -10), true);
+        this.camera = camera;
         tiledMap = new TmxMapLoader().load("test.tmx");
        
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, WORLD_TO_BOX);
-        
+
+        createWall();
         this.player = player;
         player.getBody(this);
 
@@ -90,7 +94,7 @@ public class WorldBuilder {
         BodyDef enemyBodyDef = new BodyDef();
 
         bodyDef.type = BodyDef.BodyType.KinematicBody;
-        bodyDef.position.set(player.getPlayerPosX(), (Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
+        bodyDef.position.set(80,80);
 
 
         // Create our body in the world using our body definition
@@ -109,6 +113,33 @@ public class WorldBuilder {
         fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f; // Make it bounce a little bit
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        enemyBox.dispose();
+    }
+
+    public void createWall(){
+        BodyDef enemyBodyDef = new BodyDef();
+
+        enemyBodyDef.type = BodyDef.BodyType.StaticBody;
+        enemyBodyDef.position.set(10,0.1f);
+
+
+        // Create our body in the world using our body definition
+        Body body = world.createBody(enemyBodyDef);
+        Body playerBody = world.createBody(enemyBodyDef);
+
+         // Create a polygon shape
+        PolygonShape enemyBox = new PolygonShape();
+        enemyBox.setAsBox(camera.viewportWidth,1*WORLD_TO_BOX);
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = enemyBox;
+
 
         // Create our fixture and attach it to the body
         Fixture fixture = body.createFixture(fixtureDef);

@@ -105,8 +105,6 @@ public class Player implements ContactListener {
         this.jump = new Animation(0, regions[1]);
         this.walk = new Animation(0.15f, regions[2], regions[3], regions[4]);
         this.walk.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
-        
-
 	}
 
 	
@@ -123,9 +121,11 @@ public class Player implements ContactListener {
         BodyDef groundBodyDef = new BodyDef();
         BodyDef playerBodyDef = new BodyDef();
         // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
-        groundBodyDef.type = BodyDef.BodyType.KinematicBody;
+        groundBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.fixedRotation=true;
+        groundBodyDef.fixedRotation=true;
+
 //        playerBodyDef.linearDamping = 2f;
         // Set our body's starting position in the world
         groundBodyDef.position.set(getPlayerPosX(), getPlayerPosY());
@@ -139,7 +139,7 @@ public class Player implements ContactListener {
         this.groundBody = world.getWorld().createBody(groundBodyDef);
 
         this.playerBody = world.getWorld().createBody(playerBodyDef);
-
+        this.groundBody.setGravityScale(0);
         // Create a circle shape and set its radius to 6
         //      CircleShape circle = new CircleShape();
         //      circle.setRadius(6f);
@@ -168,6 +168,33 @@ public class Player implements ContactListener {
 
         playerBox.dispose();
         groundBox.dispose();
+
+/*        //test
+        BodyDef enemyBodyDef = new BodyDef();
+
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(10,10);
+
+
+        // Create our body in the world using our body definition
+        Body body = world.createBody(bodyDef);
+        Body playerBody = world.createBody(enemyBodyDef);
+
+        // Create a polygon shape
+        PolygonShape enemyBox = new PolygonShape();
+        enemyBox.setAsBox(camera.viewportWidth,1*WORLD_TO_BOX);
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = enemyBox;
+
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        enemyBox.dispose();
+        //test ende*/
 
         return 0;
     }

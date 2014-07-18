@@ -19,8 +19,8 @@ public class WorldBuilder {
     World world;
     TiledMap tiledMap;
     TiledMapRenderer tiledMapRenderer;
-    static final float WORLD_TO_BOX=0.01f;
-    static final float BOX_WORLD_TO=100f;
+    static final float WORLD_TO_BOX=0.3f;
+    static final float BOX_WORLD_TO=30f;
     static final float BOX_STEP=1/120f;
     static final int  BOX_VELOCITY_ITERATIONS=8;
     static final int BOX_POSITION_ITERATIONS=3;
@@ -37,9 +37,11 @@ public class WorldBuilder {
     public WorldBuilder(Player player) {
         world = new World(new Vector2(0, -10), true);
         tiledMap = new TmxMapLoader().load("test.tmx");
+       
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        
         this.player = player;
-        player.getBody(world);
+        player.getBody(this);
 
         /*// First we create a body definition
         BodyDef bodyDef = new BodyDef();

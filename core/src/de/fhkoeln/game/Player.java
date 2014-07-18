@@ -29,7 +29,7 @@ public class Player {
 	}
 	
 	private float max_velocity;
-	private float jump_velocity = 40f;
+	private float jump_velocity = 40f*0.3f;
 	private Vector2 velocity;
     private Vector2 pos;
 	
@@ -77,7 +77,7 @@ public class Player {
     	PlayerPosY=StartPlayerPos.y;
     	
         setState(State.Standing);
-		setMax_velocity(100f);
+		setMax_velocity(100f*0.3f);
 		//this.gd = new GestureDetector(this);
 		this.velocity = new Vector2(0, 0);
         this.pos = new Vector2(PlayerPosX, PlayerPosY);
@@ -112,7 +112,7 @@ public class Player {
 		StartPlayerPos = startPlayerPos;
 	}
 
-	public float getBody(World world) {
+	public float getBody(WorldBuilder world) {
 		
 		 BodyDef bodyDef = new BodyDef();
 	     BodyDef playerBodyDef = new BodyDef();
@@ -122,20 +122,22 @@ public class Player {
 	     // Set our body's starting position in the world
 	     bodyDef.position.set(getPlayerPosX(), getPlayerPosY());
 	     playerBodyDef.position.set(getPlayerPosX(), getPlayerPosY()+50);
+	     
 	     //        bodyDef.position.set(1, 500);
 
 	     //System.out.println((Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
 
 	     // Create our body in the world using our body definition
-	     this.body = world.createBody(bodyDef);
-	     this.playerBody = world.createBody(playerBodyDef);
+	     this.body = world.getWorld().createBody(bodyDef);
+	     
+	     this.playerBody = world.getWorld().createBody(playerBodyDef);
 	     
 	     // Create a circle shape and set its radius to 6
 	     //      CircleShape circle = new CircleShape();
 	     //      circle.setRadius(6f);
 	     // Create a polygon shape
 	     PolygonShape groundBox = new PolygonShape();
-	     groundBox.setAsBox(30,30);
+	     groundBox.setAsBox(world.ConvertToBox(30),world.ConvertToBox(30));
 	     // Create a fixture definition to apply our shape to
 	     FixtureDef fixtureDef = new FixtureDef();
 	     fixtureDef.shape = groundBox;
@@ -218,7 +220,7 @@ public class Player {
 		
 		else if(state == State.Jumping){
 			//if(playerBody.getPosition().y == body.getPosition().y)
-				playerBody.applyForce(0, jump_velocity+500, 0, body.getWorldCenter().y+100, true);
+				playerBody.applyForce(0, jump_velocity, 0, body.getWorldCenter().y+100, true);
 		}
 		
 		else if(state == State.Standing){

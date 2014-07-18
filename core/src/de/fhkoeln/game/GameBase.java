@@ -59,12 +59,14 @@ public class GameBase extends ApplicationAdapter   {
         
         
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,w,h);
-        //camera.zoom += 0.5;
+        camera.setToOrtho(false,w*0.3f,h*0.3f);
+        //camera.setToOrtho(false,1280,720);
+
+        //camera.zoom += 2.5;
 		camera.position.set(w/2, h/2, 100);
 
         //camera.rotate(rotationSpeed, 1, 0, 0);
-        //camera.update();
+        camera.update();
 
         //Gdx.input.setInputProcessor(this);
         
@@ -96,7 +98,7 @@ public class GameBase extends ApplicationAdapter   {
         batch.begin();
 		elapsedTime += Gdx.graphics.getDeltaTime();
         debugRenderer.render(worldbuilder.getWorld(), camera.combined);
-		batch.draw(player.getAnimation().getKeyFrame(elapsedTime, true), player.getPlayerPosX(), player.getPlayerPosY());
+		batch.draw(player.getAnimation().getKeyFrame(elapsedTime, true), player.getPlayerPosX()*0.3f, player.getPlayerPosY()*0.3f);
 //        batch.draw(player.getSprite(), player.getPlayerPosX(), player.getPlayerPosY(),player.getSprite().getOriginX(),player.getSprite().getOriginY(),player.getSprite().getWidth(),player.getSprite().getHeight(),0,0,player.getSprite().getRotation());
 
 		//player.getAnimation().getKeyFrame(elapsedTime, true);

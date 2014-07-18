@@ -29,7 +29,7 @@ public class Player {
 	}
 	
 	private float max_velocity;
-	private float jump_velocity = 40f*0.3f;
+	private float jump_velocity = 40f;
 	private Vector2 velocity;
     private Vector2 pos;
 	
@@ -72,12 +72,12 @@ public class Player {
         sprite = textureAtlas.createSprite("spineboy");
         sprite.rotate90(true);*/
     	
-    	StartPlayerPos=new Vector3(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2,0);
+    	StartPlayerPos=new Vector3(Gdx.graphics.getWidth()/2*0.3f, Gdx.graphics.getHeight()/2*0.3f,0);
     	PlayerPosX=StartPlayerPos.x;
     	PlayerPosY=StartPlayerPos.y;
     	
         setState(State.Standing);
-		setMax_velocity(100f*0.3f);
+		setMax_velocity(100f);
 		//this.gd = new GestureDetector(this);
 		this.velocity = new Vector2(0, 0);
         this.pos = new Vector2(PlayerPosX, PlayerPosY);

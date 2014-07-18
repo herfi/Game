@@ -38,7 +38,7 @@ public class WorldBuilder {
         world = new World(new Vector2(0, -10), true);
         tiledMap = new TmxMapLoader().load("test.tmx");
        
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 0.3f);
         
         this.player = player;
         player.getBody(this);

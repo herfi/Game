@@ -20,10 +20,6 @@ public class WorldBuilder {
     TiledMap tiledMap;
     TiledMapRenderer tiledMapRenderer;
     static final float WORLD_TO_BOX=1/100f;
-    static final float BOX_WORLD_TO=100f;
-    static final float BOX_STEP=1/120f;
-    static final int  BOX_VELOCITY_ITERATIONS=8;
-    static final int BOX_POSITION_ITERATIONS=3;
     float accumulator;
     private Body body;
     private BodyDef.BodyType bodyType;
@@ -88,6 +84,38 @@ public class WorldBuilder {
         //tiledMapRenderer.setView(camera);
         //tiledMapRenderer.render();
 */  
+    }
+
+    public void createEnemy(){
+        BodyDef enemyBodyDef = new BodyDef();
+
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.position.set(player.getPlayerPosX(), (Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
+
+
+        // Create our body in the world using our body definition
+        Body body = world.createBody(bodyDef);
+        Body playerBody = world.createBody(enemyBodyDef);
+
+        //body.setLinearVelocity(15,10);
+        //playerBody.setLinearVelocity(5,0);
+;
+        // Create a polygon shape
+        PolygonShape enemyBox = new PolygonShape();
+        enemyBox.setAsBox(15,30);
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = enemyBox;
+        fixtureDef.density = 0f;
+        fixtureDef.friction = 0f;
+        fixtureDef.restitution = 0f; // Make it bounce a little bit
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        enemyBox.dispose();
     }
 
     public TiledMapRenderer getTiledMapRenderer() {

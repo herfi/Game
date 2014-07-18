@@ -157,7 +157,7 @@ public class Player implements ContactListener {
         Fixture fixture = groundBody.createFixture(groundFixtureDef);
 
         PolygonShape playerBox = new PolygonShape();
-        playerBox.setAsBox(100*WORLD_TO_BOX,100*WORLD_TO_BOX);
+        playerBox.setAsBox(50*WORLD_TO_BOX,100*WORLD_TO_BOX);
 
         FixtureDef playerFixtureDef = new FixtureDef();
         playerFixtureDef.shape = playerBox;

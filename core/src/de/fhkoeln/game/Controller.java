@@ -18,6 +18,10 @@ public class Controller implements GestureListener, InputProcessor{
     private int leftDownY;
     private int leftPointer;
     private float tapSquareSize = 40;
+    private State tmp1;
+    private DirectionX tmp2;
+    private DirectionY tmp3;
+    private Boolean tmp4;
 
     public Controller(Player player) {
 		this.player = player;
@@ -31,7 +35,20 @@ public class Controller implements GestureListener, InputProcessor{
 	public void setGd(GestureDetector gd) {
 		this.gd = gd;
 	}
-
+	
+	private void moveFilter(){
+		
+		
+		if((tmp1 != player.getState()) && tmp2 != player.getDirX() && tmp3 != player.getDirY() && tmp4 != player.jumpState){
+			
+			player.move();
+			tmp1 = player.getState();
+			tmp2 = player.getDirX();
+			tmp3 = player.getDirY();
+			tmp4 = player.jumpState;
+		}
+			
+	}
 	public boolean touchDragged (int x, int y, int pointer) {
 
 
@@ -68,7 +85,7 @@ public class Controller implements GestureListener, InputProcessor{
 			}
 		}
 
-		player.move();
+		moveFilter();
 
 	    return true;
 	    }
@@ -185,7 +202,7 @@ public class Controller implements GestureListener, InputProcessor{
         if (leftPointer == pointer) {
             player.setState(State.Standing);
         }
-        player.move();
+        moveFilter();
         return false;
     }
 

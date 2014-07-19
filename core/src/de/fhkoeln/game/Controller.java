@@ -39,7 +39,7 @@ public class Controller implements GestureListener, InputProcessor{
 	private void moveFilter(){
 		
 		
-		if((tmp1 != player.getState()) && tmp2 != player.getDirX() && tmp3 != player.getDirY() && tmp4 != player.jumpState){
+		if((tmp1 != player.getState()) || tmp2 != player.getDirX() || tmp3 != player.getDirY() || tmp4 != player.jumpState){
 			
 			player.move();
 			tmp1 = player.getState();

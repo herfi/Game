@@ -18,5 +18,8 @@
  </layer>
  <objectgroup name="Grund">
   <object name="grund" x="58" y="742" width="3076" height="256"/>
+  <object name="player" x="182" y="884"/>
+  <object name="enemy" x="656" y="818"/>
+  <object name="enemy" x="654" y="944"/>
  </objectgroup>
 </map>

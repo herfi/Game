@@ -85,7 +85,7 @@ public class Controller implements GestureListener, InputProcessor{
 			}
 		}
 
-		moveFilter();
+		player.move();
 
 	    return true;
 	    }
@@ -202,7 +202,8 @@ public class Controller implements GestureListener, InputProcessor{
         if (leftPointer == pointer) {
             player.setState(State.Standing);
         }
-        moveFilter();
+        //moveFilter();
+        player.move();
         return false;
     }
 

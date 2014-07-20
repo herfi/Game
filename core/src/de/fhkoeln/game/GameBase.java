@@ -2,24 +2,14 @@ package de.fhkoeln.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class GameBase extends ApplicationAdapter   {
-    static final float WORLD_TO_BOX=1/100f;
+    static float WORLD_TO_BOX = 1/100f;
 	SpriteBatch batch;
 	Texture img;
 	//private BitmapFont font;
@@ -56,14 +46,13 @@ public class GameBase extends ApplicationAdapter   {
         
         
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,w*WORLD_TO_BOX,h*WORLD_TO_BOX);
+        //camera.setToOrtho(false,w*WORLD_TO_BOX,h*WORLD_TO_BOX);
         //camera.setToOrtho(false,1280,720);
 
         //camera.zoom += 2.5;
-		camera.position.set(w/2, h/2, 100);
+		//camera.position.set(w/2, h/2, 100);
 
         //camera.rotate(rotationSpeed, 1, 0, 0);
-        camera.update();
 
         player = new Player(camera);
         worldbuilder = new WorldBuilder(player,camera);
@@ -74,7 +63,7 @@ public class GameBase extends ApplicationAdapter   {
         //Gdx.input.setInputProcessor(player.getGd());
         Gdx.input.setInputProcessor(controller);
 
-        
+        //camera.position.set(Gdx.graphics.getWidth()/2*WORLD_TO_BOX, Gdx.graphics.getHeight()/2*WORLD_TO_BOX, 0);
 	}
 
 	@Override
@@ -82,8 +71,7 @@ public class GameBase extends ApplicationAdapter   {
 //		Gdx.gl.glClearColor(1, 0, 0, 1);
 //		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 //		camera.rotate(rotationSpeed, 0, 0, 1);
-		camera.position.set(player.getPlayerPosX(), player.getStartPlayerPos().y, 100);
-        camera.update();
+
         
 		Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

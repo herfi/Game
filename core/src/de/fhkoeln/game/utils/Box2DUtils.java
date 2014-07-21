@@ -14,15 +14,15 @@
 
 package de.fhkoeln.game.utils;
 
-import static net.dermetfan.utils.libgdx.math.GeometryUtils.filterX;
-import static net.dermetfan.utils.libgdx.math.GeometryUtils.filterY;
-import static net.dermetfan.utils.math.MathUtils.amplitude;
-import static net.dermetfan.utils.math.MathUtils.max;
-import static net.dermetfan.utils.math.MathUtils.min;
-import net.dermetfan.utils.ArrayUtils;
-import net.dermetfan.utils.Pair;
-import net.dermetfan.utils.libgdx.math.GeometryUtils;
-import net.dermetfan.utils.math.MathUtils;
+import static de.fhkoeln.game.utils.libgdx.math.GeometryUtils.filterX;
+import static de.fhkoeln.game.utils.libgdx.math.GeometryUtils.filterY;
+import static de.fhkoeln.game.utils.math.MathUtils.amplitude;
+import static de.fhkoeln.game.utils.math.MathUtils.max;
+import static de.fhkoeln.game.utils.math.MathUtils.min;
+import de.fhkoeln.game.utils.ArrayUtils;
+import de.fhkoeln.game.utils.Pair;
+import de.fhkoeln.game.utils.libgdx.math.GeometryUtils;
+import de.fhkoeln.game.utils.math.MathUtils;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;

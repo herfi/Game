@@ -62,13 +62,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pools;
-import net.dermetfan.utils.libgdx.box2d.Box2DMapObjectParser.Listener.Adapter;
+import de.fhkoeln.game.utils.Box2DMapObjectParser.Listener.Adapter;
 
-import static net.dermetfan.utils.libgdx.maps.MapUtils.findProperty;
-import static net.dermetfan.utils.libgdx.maps.MapUtils.getProperty;
-import static net.dermetfan.utils.libgdx.math.GeometryUtils.decompose;
-import static net.dermetfan.utils.libgdx.math.GeometryUtils.isConvex;
-import static net.dermetfan.utils.libgdx.math.GeometryUtils.triangulate;
+import static de.fhkoeln.game.utils.libgdx.maps.MapUtils.findProperty;
+import static de.fhkoeln.game.utils.libgdx.maps.MapUtils.getProperty;
+import static de.fhkoeln.game.utils.libgdx.math.GeometryUtils.decompose;
+import static de.fhkoeln.game.utils.libgdx.math.GeometryUtils.isConvex;
+import static de.fhkoeln.game.utils.libgdx.math.GeometryUtils.triangulate;
 
 /** Parses {@link com.badlogic.gdx.maps.MapObjects} from a {@link com.badlogic.gdx.maps.Map} and generates Box2D {@link com.badlogic.gdx.physics.box2d.Body Bodies}, {@link com.badlogic.gdx.physics.box2d.Fixture Fixtures} and {@link com.badlogic.gdx.physics.box2d.Joint Joints} from them.<br>
  *  Just create a new {@link de.fhkoeln.game.utils.Box2DMapObjectParser} and call {@link #load(com.badlogic.gdx.physics.box2d.World, com.badlogic.gdx.maps.MapLayer)} to load all compatible objects (defined by the the {@link #aliases}) into your {@link com.badlogic.gdx.physics.box2d.World}.<br>

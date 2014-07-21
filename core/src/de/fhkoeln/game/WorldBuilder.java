@@ -15,6 +15,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
+import de.fhkoeln.game.utils.Box2DMapObjectParser;
+
 /**
  * Created by goetsch on 15.07.14.
  */
@@ -65,27 +67,33 @@ public class WorldBuilder {
         world = new World(new Vector2(0, -9.81f), true);
         this.camera = camera;
         tiledMap = new TmxMapLoader().load("tmnt.tmx");
+        Box2DMapObjectParser parser = new Box2DMapObjectParser(WORLD_TO_BOX);
+        parser.load(world, tiledMap);
+
+        //parser.getBodies().;
         mapWidth = tiledMap.getProperties().get("width", Integer.class).floatValue()*tiledMap.getProperties().get("tilewidth", Integer.class).floatValue();
         mapHeight = tiledMap.getProperties().get("height", Integer.class).floatValue()*tiledMap.getProperties().get("tileheight", Integer.class).floatValue();
         System.out.println("mapsize:"+ mapWidth);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, WORLD_TO_BOX);
 
+        //camera.setToOrtho(false, mapHeight*(16/9f)*WORLD_TO_BOX, mapHeight*WORLD_TO_BOX);
         camera.setToOrtho(false, mapHeight*(16/9f)*WORLD_TO_BOX, mapHeight*WORLD_TO_BOX);
+
         camera.position.set(mapHeight*(16/9f)/2*WORLD_TO_BOX, mapHeight/2*WORLD_TO_BOX, 100);
         camera.update();
 
 
-        createWall(mapWidth / 2, 0, mapWidth / 2, 10f); //Bottom wall
+        //createWall(mapWidth / 2, 0, mapWidth / 2, 10f); //Bottom wall
 
 
 
-        Rectangle groundSize = ((RectangleMapObject)tiledMap.getLayers().get("Grund").getObjects().get("grund")).getRectangle();
+        //Rectangle groundSize = ((RectangleMapObject)tiledMap.getLayers().get("Grund").getObjects().get("grund")).getRectangle();
 
 
 
-        System.out.println("groundSizeX:"+groundSize.getX());
+        //System.out.println("groundSizeX:"+groundSize.getX());
 
-        createWall(groundSize.getWidth()/2,0,groundSize.getX()+groundSize.getWidth()/2,groundSize.getY()+groundSize.getHeight()); // top wall
+        //createWall(groundSize.getWidth()/2,0,groundSize.getX()+groundSize.getWidth()/2,groundSize.getY()+groundSize.getHeight()); // top wall
 
         this.player = player;
         player.getBody(this);
@@ -218,7 +226,7 @@ public class WorldBuilder {
    void update(){
        //bodyDef.position.set(player.getPlayerPosX(), (Float)tiledMap.getLayers().get("Grund").getObjects().get("grund").getProperties().get("y"));
        //body.setLinearVelocity(player.getMax_velocity(),0);
-       if ((player.getPlayerPosX() > camera.viewportWidth/2) && (camera.position.x+camera.viewportWidth/2 < getMapWidth()-0.5f))
+       if ((player.getPlayerPosX() > camera.viewportWidth/2) && (camera.position.x+camera.viewportWidth/2 < getMapWidth()-0.1f))
            camera.position.set(player.getPlayerPosX(), mapHeight/2*WORLD_TO_BOX, 0);
        camera.update();
    }

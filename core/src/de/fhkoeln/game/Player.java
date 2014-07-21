@@ -18,6 +18,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
+import java.util.Queue;
+
 public class Player implements ContactListener {
 
     static final float WORLD_TO_BOX=1/100f; //4.821428571f*
@@ -100,6 +102,8 @@ public class Player implements ContactListener {
     Animation walk;
 	private Body groundBody;
 	private Body playerBody;
+    private Body colboxBody;
+    private Body hitBoxBody;
 
 
     public Sprite getSprite() {
@@ -118,13 +122,13 @@ public class Player implements ContactListener {
         sprite.rotate90(true);*/
     	this.camera = camera;
   //  	StartPlayerPos=new Vector3(Gdx.graphics.getWidth()/2*WORLD_TO_BOX, Gdx.graphics.getHeight()/2*WORLD_TO_BOX,0);
-        StartPlayerPos=new Vector3(1f, 0.5f, 0);
+        StartPlayerPos=new Vector3(1f, 0.1f, 0);
 
         PlayerPosX=StartPlayerPos.x;
     	PlayerPosY=StartPlayerPos.y;
     	
         setState(State.Standing);
-		setMaxVelocity(100 * WORLD_TO_BOX);
+		setMaxVelocity(200 * WORLD_TO_BOX);
         setMaxVelocityY(50 * WORLD_TO_BOX);
 
         //this.gd = new GestureDetector(this);
@@ -161,7 +165,7 @@ public class Player implements ContactListener {
 //        playerBodyDef.linearDamping = 2f;
         // Set our body's starting position in the world
         groundBodyDef.position.set(world.getMapWidth()/2, getPlayerPosY());
-        playerBodyDef.position.set(getPlayerPosX(), getPlayerPosY()+1);
+        playerBodyDef.position.set(getPlayerPosX(), getPlayerPosY()+0.01f);
 
         //        bodyDef.position.set(1, 500);
 
@@ -206,32 +210,47 @@ public class Player implements ContactListener {
         playerBox.dispose();
         groundBox.dispose();
 
-/*        //test
-        BodyDef enemyBodyDef = new BodyDef();
+        BodyDef colboxBodyDef = new BodyDef();
+        colboxBodyDef.fixedRotation=true;
+        colboxBodyDef.type = BodyDef.BodyType.DynamicBody;
+        colboxBodyDef.position.set(getPlayerPosX(),getPlayerPosY());
+        this.colboxBody = world.getWorld().createBody(colboxBodyDef);
+        this.colboxBody.setGravityScale(0);
+        PolygonShape colboxBox = new PolygonShape();
+        colboxBox.setAsBox(18*WORLD_TO_BOX,2*WORLD_TO_BOX);
 
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(10,10);
+        FixtureDef colboxFixtureDef = new FixtureDef();
+        colboxFixtureDef.shape = colboxBox;
+        colboxFixtureDef.density = 0.001f;
+        colboxFixtureDef.friction = 0f;
+        colboxFixtureDef.restitution = 0f; // Make it bounce a little bit
+        Fixture colboxFixture = colboxBody.createFixture(colboxFixtureDef);
+        colboxFixtureDef.filter.categoryBits=CATEGORY_PLAYER;
+        colboxFixtureDef.filter.maskBits=MASK_PLAYER;
+
+        colboxBox.dispose();
+
+        BodyDef hitBoxBodyDef = new BodyDef();
+        hitBoxBodyDef.fixedRotation=true;
+        hitBoxBodyDef.type = BodyDef.BodyType.DynamicBody;
+        hitBoxBodyDef.position.set(getPlayerPosX(),getPlayerPosY());
+        this.hitBoxBody = world.getWorld().createBody(hitBoxBodyDef);
+        this.hitBoxBody.setGravityScale(0);
+        PolygonShape hitBoxBox = new PolygonShape();
+        hitBoxBox.setAsBox(18*WORLD_TO_BOX,2*WORLD_TO_BOX);
+
+        FixtureDef hitBoxFixtureDef = new FixtureDef();
+        hitBoxFixtureDef.shape = hitBoxBox;
+        hitBoxFixtureDef.density = 0.001f;
+        hitBoxFixtureDef.friction = 0f;
+        hitBoxFixtureDef.restitution = 0f; // Make it bounce a little bit
+        Fixture hitBoxFixture = hitBoxBody.createFixture(hitBoxFixtureDef);
+        hitBoxFixtureDef.filter.categoryBits=CATEGORY_PLAYER;
+        hitBoxFixtureDef.filter.maskBits=MASK_PLAYER;
+
+        hitBoxBox.dispose();
 
 
-        // Create our body in the world using our body definition
-        Body body = world.createBody(bodyDef);
-        Body playerBody = world.createBody(enemyBodyDef);
-
-        // Create a polygon shape
-        PolygonShape enemyBox = new PolygonShape();
-        enemyBox.setAsBox(camera.viewportWidth,1*WORLD_TO_BOX);
-        // Create a fixture definition to apply our shape to
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = enemyBox;
-
-
-        // Create our fixture and attach it to the body
-        Fixture fixture = body.createFixture(fixtureDef);
-
-        // Remember to dispose of any shapes after you're done with them!
-        // BodyDef and FixtureDef don't need disposing, but shapes do.
-        enemyBox.dispose();
-        //test ende*/
 
         return 0;
     }
@@ -327,7 +346,7 @@ public class Player implements ContactListener {
 		if(jumpState){
 			//if(playerBody.getPosition().y == body.getPosition().y)
             if (canApplyForce){
-                playerBody.applyLinearImpulse(0, playerBody.getMass()*9, 0, playerBody.getWorldCenter().y, true);
+                playerBody.applyLinearImpulse(0, playerBody.getMass()*400*WORLD_TO_BOX, 0, playerBody.getWorldCenter().y, true);
                 canApplyForce = false;
                 jumpState = false;
             }
@@ -355,6 +374,7 @@ public class Player implements ContactListener {
 		
 		PlayerPosX=playerBody.getPosition().x;
 		PlayerPosY=playerBody.getPosition().y;
+        colboxBody.setTransform(PlayerPosX,PlayerPosY-(20*WORLD_TO_BOX)+2*WORLD_TO_BOX,0);
 
 		// groundbody sollte player folgen:
 		//groundBody.setTransform(playerBody.getPosition().x, groundBody.getPosition().y, 0);

@@ -60,8 +60,7 @@ public class GameBase extends ApplicationAdapter   {
 
         //Gdx.input.setInputProcessor(this);
         
-        //Gdx.input.setInputProcessor(player.getGd());
-        Gdx.input.setInputProcessor(controller);
+        //Gdx.input.setInputProcessor(controller);
 
         //camera.position.set(Gdx.graphics.getWidth()/2*WORLD_TO_BOX, Gdx.graphics.getHeight()/2*WORLD_TO_BOX, 0);
 	}
@@ -86,7 +85,7 @@ public class GameBase extends ApplicationAdapter   {
         
         batch.begin();
 		elapsedTime += Gdx.graphics.getDeltaTime();
-        debugRenderer.render(worldbuilder.getWorld(), camera.combined);
+        //debugRenderer.render(worldbuilder.getWorld(), camera.combined);
 		batch.draw(player.getAnimation().getKeyFrame(elapsedTime, true), player.getPlayerPosX(), player.getPlayerPosY()-player.getAnimation().getKeyFrame(elapsedTime, true).getRegionHeight()*WORLD_TO_BOX, player.getAnimation().getKeyFrame(elapsedTime, true).getRegionWidth()*WORLD_TO_BOX,player.getAnimation().getKeyFrame(elapsedTime, true).getRegionHeight()*WORLD_TO_BOX);
 //        batch.draw(player.getSprite(), player.getPlayerPosX(), player.getPlayerPosY(),player.getSprite().getOriginX(),player.getSprite().getOriginY(),player.getSprite().getWidth(),player.getSprite().getHeight(),0,0,player.getSprite().getRotation());
 

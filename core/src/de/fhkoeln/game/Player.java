@@ -92,6 +92,10 @@ public class Player implements ContactListener {
     private Sprite sprite;
 	private Animation animation;
 
+
+
+    private int hit;
+
     OrthographicCamera camera;
 	
 
@@ -100,6 +104,9 @@ public class Player implements ContactListener {
     Animation stand;
     Animation jump;
     Animation walk;
+    Animation stand_left;
+    Animation jump_left;
+    Animation walk_left;
 	private Body groundBody;
 	private Body playerBody;
     private Body colboxBody;
@@ -131,7 +138,6 @@ public class Player implements ContactListener {
 		setMaxVelocity(200 * WORLD_TO_BOX);
         setMaxVelocityY(50 * WORLD_TO_BOX);
 
-        //this.gd = new GestureDetector(this);
 		this.velocity = new Vector2(0, 0);
         this.pos = new Vector2(PlayerPosX, PlayerPosY);
 
@@ -237,7 +243,7 @@ public class Player implements ContactListener {
         this.hitBoxBody = world.getWorld().createBody(hitBoxBodyDef);
         this.hitBoxBody.setGravityScale(0);
         PolygonShape hitBoxBox = new PolygonShape();
-        hitBoxBox.setAsBox(18*WORLD_TO_BOX,2*WORLD_TO_BOX);
+        hitBoxBox.setAsBox(10*WORLD_TO_BOX,20*WORLD_TO_BOX);
 
         FixtureDef hitBoxFixtureDef = new FixtureDef();
         hitBoxFixtureDef.shape = hitBoxBox;
@@ -304,11 +310,34 @@ public class Player implements ContactListener {
 	public void setPlayerPosZ(float playerPosZ) {
 		PlayerPosZ = playerPosZ;
 	}
-	
-	public Animation getAnimation(){
-		
-		return walk;
-	}
+
+    public Animation getAnimation(){
+        if (state == State.Walking) {
+            if (dirx == DirectionX.RIGHT)
+                return walk;
+            if (dirx == DirectionX.LEFT){
+                regions[2].flip(true,false);regions[3].flip(true,false);regions[4].flip(true, false);
+              return walk;
+            }
+        }
+        if (state == State.Standing) {
+            if (dirx == DirectionX.RIGHT)
+                return stand;
+            if (dirx == DirectionX.LEFT) {
+                regions[0].flip(true, false);
+                return stand;
+            }
+        }
+        if (state == State.Jumping) {
+            if (dirx == DirectionX.RIGHT)
+                return jump;
+            if (dirx == DirectionX.LEFT) {
+                regions[1].flip(true, false);
+                return jump;
+            }
+        }
+        return stand;
+    }
 	
 	public void disposeRes() {
 		
@@ -375,6 +404,8 @@ public class Player implements ContactListener {
 		PlayerPosX=playerBody.getPosition().x;
 		PlayerPosY=playerBody.getPosition().y;
         colboxBody.setTransform(PlayerPosX,PlayerPosY-(20*WORLD_TO_BOX)+2*WORLD_TO_BOX,0);
+        hitBoxBody.setTransform(PlayerPosX+hit*WORLD_TO_BOX,PlayerPosY,0);
+        setHit(0);
 
 		// groundbody sollte player folgen:
 		//groundBody.setTransform(playerBody.getPosition().x, groundBody.getPosition().y, 0);
@@ -465,6 +496,15 @@ public class Player implements ContactListener {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
+
+    public int getHit() {
+        return hit;
+    }
+
+    public void setHit(int hit) {
+        this.hit = hit;
 
     }
 }

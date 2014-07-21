@@ -1,6 +1,7 @@
 package de.fhkoeln.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
@@ -9,14 +10,22 @@ import com.badlogic.gdx.math.Vector2;
 import de.fhkoeln.game.Player.DirectionX;
 import de.fhkoeln.game.Player.DirectionY;
 import de.fhkoeln.game.Player.State;
+import de.fhkoeln.game.utils.libgdx.Multiplexer;
 
-public class Controller implements GestureListener, InputProcessor{
+public class Controller implements InputProcessor{
 	
 	private GestureDetector gd;
+
+
+
+    private InputMultiplexer im;
 	private Player player;
     private int leftDownX;
     private int leftDownY;
     private int leftPointer;
+    private int rightDownX;
+    private int rightDownY;
+    private int rightPointer;
     private float tapSquareSize = 40;
     private State tmp1;
     private DirectionX tmp2;
@@ -24,7 +33,14 @@ public class Controller implements GestureListener, InputProcessor{
     private Boolean tmp4;
 
     public Controller(Player player) {
-		this.player = player;
+        //InputMultiplexer im = new InputMultiplexer(this);
+        //this.gd = new GestureDetector(this);
+
+
+        Gdx.input.setInputProcessor(this);
+
+
+        this.player = player;
 	}
 	
 	public GestureDetector getGd() {
@@ -35,7 +51,8 @@ public class Controller implements GestureListener, InputProcessor{
 	public void setGd(GestureDetector gd) {
 		this.gd = gd;
 	}
-	
+
+
 	private void moveFilter(){
 		
 		
@@ -87,77 +104,20 @@ public class Controller implements GestureListener, InputProcessor{
 
 		player.move();
 
-	    return true;
+	    return false;
 	    }
 
     private boolean isWithinTapSquare (float x, float y, float centerX, float centerY) {
         return Math.abs(x - centerX) < tapSquareSize && Math.abs(y - centerY) < tapSquareSize;
     }
 	
-	@Override
-	public boolean touchDown(float x, float y, int pointer, int button) {
-		return false;
-	}
 
-	@Override
-	public boolean tap(float x, float y, int count, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    private boolean isTapped(){
 
-	@Override
-	public boolean longPress(float x, float y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean fling(float velocityX, float velocityY, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		
-		
-//		if (deltaX > 0){
-//			setState(State.Walking);
-//			setDir(Direction.RIGHT);
-//		}
-//		if (deltaX < 0) {
-//			setState(State.Walking);
-//			setDir(Direction.LEFT);
-//		}
-//		move();
-	
-		
-		return false;
-	}
-
-	@Override
-	public boolean panStop(float x, float y, int pointer, int button) {
-
-		
-		return false;
-	}
-
-	@Override
-	public boolean zoom(float initialDistance, float distance) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
-			Vector2 pointer1, Vector2 pointer2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	
-	//GestureListener end
+        return false;
+    }
 	
 	
 	//InputProcessor start
@@ -189,8 +149,15 @@ public class Controller implements GestureListener, InputProcessor{
             leftDownX = screenX;
             leftDownY = screenY;
             leftPointer = pointer;
+        }else{
+            rightDownX = screenX;
+            rightDownY = screenY;
+            rightPointer = pointer;
+
+
         }
         System.out.println("POS: "+leftDownX+"-"+leftDownY);
+
 		return false;
 	}
 
@@ -201,6 +168,11 @@ public class Controller implements GestureListener, InputProcessor{
         //if (Gdx.input.getX(pointer) < Gdx.graphics.getWidth()/2 ){
         if (leftPointer == pointer) {
             player.setState(State.Standing);
+        }
+
+            if(isWithinTapSquare(screenX,screenY,rightDownX,rightDownY)){
+                player.setHit(8);
+
         }
         //moveFilter();
         player.move();

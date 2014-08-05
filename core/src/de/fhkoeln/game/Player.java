@@ -317,6 +317,7 @@ public class Player implements ContactListener {
                 return walk;
             if (dirx == DirectionX.LEFT){
                 regions[2].flip(true,false);regions[3].flip(true,false);regions[4].flip(true, false);
+                this.walk = new Animation(0.15f, regions[2], regions[3], regions[4]);
               return walk;
             }
         }
